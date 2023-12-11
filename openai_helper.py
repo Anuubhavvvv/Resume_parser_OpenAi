@@ -1,15 +1,14 @@
 import json
-
 import pandas as pd
-from stream import client
-
 from PyPDF2 import PdfReader
 from docx import Document
 from PIL import Image
 import pytesseract
 
+import JD_Resume
 
-def extract_resume_data(text):
+
+def extract_resume_data(client,text):
     prompt = get_prompt() + text
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
@@ -29,7 +28,7 @@ def extract_resume_data(text):
 
     return pd.DataFrame({
         "Entities": ["Name", "email_id", "mob_number", "qualification", "experience", "skills", "certification",
-                    "achievement"],
+                     "achievement"],
         "value": ["", "", "", "", "", "", "", ""]
 
     })
@@ -86,3 +85,4 @@ if __name__ == '__main__':
     text = " "
     df = extract_resume_data(text)
     print(df.to_string())
+
