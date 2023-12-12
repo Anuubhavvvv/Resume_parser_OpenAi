@@ -4,7 +4,6 @@ import openai_helper
 from openai import OpenAI
 from JD_Resume import Calculate_score
 
-
 ############################
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
@@ -20,7 +19,9 @@ resume_data = pd.DataFrame({
     "value": ["", "", "", "", "", "", "", ""]
 })
 
-st.title("Resume Extractor App")
+st.title("HR Assistant")
+
+# Resume Uploading
 uploaded_file = st.file_uploader("upload a file", type=["pdf", "docx", "png", "jpg", "jpeg"])
 if uploaded_file is not None:
     file_type = uploaded_file.type
@@ -36,6 +37,31 @@ if uploaded_file is not None:
 
     else:
         st.error("Unsupported file.please upload a Pdf,Docx,or Image file .")
+
+# JD comparison
+st.write("")
+st.title("Compare your resume with Job discription")
+job_description = st.text_area("enter the job description here:")
+st.session_state.jd = job_description
+
+if st.button("Check Similarity"):
+    score = Calculate_score(st.session_state.jd, st.session_state.resume_text)
+    st.write(f"Similarity Score:{score}")
+    if score < 50:
+        st.write("Less Similar to the Given Job description ")
+    elif 50 <= score < 70:
+        st.write("Similar to The given Job description, May Consider")
+    else:
+        st.write("Excellent! You can consider the CV")
+
+st.write("")
+st.write("")
+st.markdown("***")
+st.write("")
+st.write("")
+
+# Resume Extractor
+st.title("Resume Extractor ")
 
 if st.button("Extract"):
     resume_data = openai_helper.extract_resume_data(client, st.session_state.resume_text)
@@ -54,19 +80,3 @@ st.write("")
 st.markdown("***")
 st.write("")
 st.write("")
-
-st.title("Compare your resume with Job discription")
-job_description = st.text_area("enter the job description here:")
-st.session_state.jd = job_description
-
-if st.button("Check Similarity"):
-    score = Calculate_score(st.session_state.jd, st.session_state.resume_text)
-    st.write(f"Similarity Score:{score}")
-    if score <50:
-        st.write("Low chance,need to modify your CV!")
-    elif 50 <= score < 70:
-        st.write("Good Chance but you can improve further!")
-    else:
-        st.write("Excellent! You can submit your CV")
-
-
