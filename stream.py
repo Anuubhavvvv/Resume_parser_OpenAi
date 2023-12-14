@@ -7,7 +7,7 @@ from JD_Resume import Calculate_score
 ############################
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-
+score =0
 if "resume_text" not in st.session_state:
     st.session_state.resume_text = ""
 if "jd" not in st.session_state:
@@ -47,12 +47,15 @@ st.session_state.jd = job_description
 if st.button("Check Similarity"):
     score = Calculate_score(st.session_state.jd, st.session_state.resume_text)
     st.write(f"Similarity Score:{score}")
+    if score:
+        st.progress(score / 100.0)
     if score < 50:
         st.write("Less Similar to the Given Job description ")
     elif 50 <= score < 70:
         st.write("Similar to The given Job description, May Consider")
     else:
         st.write("Excellent! You can consider the CV")
+
 
 st.write("")
 st.write("")
