@@ -40,7 +40,7 @@ if uploaded_file is not None:
 
 # JD comparison
 st.write("")
-st.title("Compare your resume with Job discription")
+st.title("Compare your resume with Job description")
 job_description = st.text_area("enter the job description here:")
 st.session_state.jd = job_description
 
@@ -78,8 +78,3 @@ st.dataframe(resume_data,
              hide_index=True)
 
 ####################################
-st.write("")
-st.write("")
-st.markdown("***")
-st.write("")
-st.write("")
